@@ -52,54 +52,54 @@ router.get('/images/:imagename', async (req, res) => {
     let mime = await fileType.fromFile(imagepath)
     console.log(mime)
 
-	res.writeHead(200, {'Content-Type': mime })
-	res.end(image, 'binary')
+    res.writeHead(200, {'Content-Type': mime })
+    res.end(image, 'binary')
 })
 
 router.post('/housing', (req, res) => {
     console.log("/housing")
-	let post = req.body
-	let sql = "INSERT INTO housingTable (email, type, bed, bath, price, covidTested, moveIn, location, desc, date, image) VALUES (?,?,?,?,?,?,?,?,?,?,?) ";
-	db.run(sql, post.email, post.type, post.bed, post.bath, post.price, post.covidTested, post.moveIn, post.location, post.desc, post.date, post.image, (err) => {
-		if (err) {
-			console.log("DB insert error", err.message);
-			throw err;
+    let post = req.body
+    let sql = "INSERT INTO housingTable (email, type, bed, bath, price, covidTested, moveIn, location, desc, date, image) VALUES (?,?,?,?,?,?,?,?,?,?,?) ";
+    db.run(sql, post.email, post.type, post.bed, post.bath, post.price, post.covidTested, post.moveIn, post.location, post.desc, post.date, post.image, (err) => {
+        if (err) {
+            console.log("DB insert error", err.message);
+            throw err;
         } else {
             res.send({message: "Upload Successful!"});
         }
-	})
+    })
 })
 
 
 router.get('/housing/all', (req, res) => {
     console.log("/housing/all")
-	let sql = "SELECT * FROM housingTable";
-	db.all(sql, (err, val) => {
-		if (err) {
-			console.log("DB insert error", err.message);
-			throw err;
+    let sql = "SELECT * FROM housingTable";
+    db.all(sql, (err, val) => {
+        if (err) {
+            console.log("DB insert error", err.message);
+            throw err;
         } else {
             res.send(val || {});
         }
-	})
+    })
 })
 
 router.get('/housing/:id', (req, res) => {
     console.log("/housing/:id")
     let postId = req.params.id
-	let sql = "SELECT * FROM housingTable WHERE id = ?";
-	db.get(sql, postId, (err, val) => {
-		if (err) {
-			console.log("DB insert error", err.message);
-			throw err;
+    let sql = "SELECT * FROM housingTable WHERE id = ?";
+    db.get(sql, postId, (err, val) => {
+        if (err) {
+            console.log("DB insert error", err.message);
+            throw err;
         } else {
             res.send(val || {});
         }
-	})
+    })
 })
 
 router.get('/', (req, res) => {
-	res.sendFile(path.join(__dirname, 'index.html'))
+    res.sendFile(path.join(__dirname, 'index.html'))
 })
 
 
@@ -107,7 +107,6 @@ app.use(express.json());
 app.use('/', router)
 
 app.use((err, req, res, next) => {
-
     if (err.code == 'ENOENT') {
         res.status(404).json({message: 'Image Not Found !'})
     } else {
